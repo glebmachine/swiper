@@ -7,7 +7,7 @@
  *
  * Released under the MIT License
  *
- * Released on: July 31, 2018
+ * Released on: August 22, 2018
  */
 
 import { $, addClass, removeClass, hasClass, toggleClass, attr, removeAttr, data, transform, transition, on, off, trigger, transitionEnd, outerWidth, outerHeight, offset, css, each, html, text, is, index, eq, append, prepend, next, nextAll, prev, prevAll, parent, parents, closest, find, children, remove, add, styles } from 'dom7/dist/dom7.modular';
@@ -261,7 +261,7 @@ class SwiperClass {
     events.split(' ').forEach((event) => {
       if (typeof handler === 'undefined') {
         self.eventsListeners[event] = [];
-      } else {
+      } else if (self.eventsListeners[event] && self.eventsListeners[event].length) {
         self.eventsListeners[event].forEach((eventHandler, index$$1) => {
           if (eventHandler === handler) {
             self.eventsListeners[event].splice(index$$1, 1);
@@ -2419,6 +2419,7 @@ const Browser = (function Browser() {
   }
   return {
     isIE: !!window.navigator.userAgent.match(/Trident/g) || !!window.navigator.userAgent.match(/MSIE/g),
+    isEdge: !!window.navigator.userAgent.match(/Edge/g),
     isSafari: isSafari(),
     isUiWebView: /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(window.navigator.userAgent),
   };
@@ -2455,7 +2456,7 @@ function addClasses () {
     suffixes.push('ios');
   }
   // WP8 Touch Events Fix
-  if (Browser.isIE && (Support.pointerEvents || Support.prefixedPointerEvents)) {
+  if ((Browser.isIE || Browser.isEdge) && (Support.pointerEvents || Support.prefixedPointerEvents)) {
     suffixes.push(`wp8-${params.direction}`);
   }
 
@@ -3431,8 +3432,6 @@ var Virtual$1 = {
       };
       Utils.extend(swiper.params, overwriteParams);
       Utils.extend(swiper.originalParams, overwriteParams);
-
-      swiper.virtual.update();
     },
     setTranslate() {
       const swiper = this;

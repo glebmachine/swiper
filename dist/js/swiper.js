@@ -7,7 +7,7 @@
  *
  * Released under the MIT License
  *
- * Released on: July 31, 2018
+ * Released on: August 22, 2018
  */
 
 (function (global, factory) {
@@ -1102,7 +1102,7 @@
     events.split(' ').forEach(function (event) {
       if (typeof handler === 'undefined') {
         self.eventsListeners[event] = [];
-      } else {
+      } else if (self.eventsListeners[event] && self.eventsListeners[event].length) {
         self.eventsListeners[event].forEach(function (eventHandler, index) {
           if (eventHandler === handler) {
             self.eventsListeners[event].splice(index, 1);
@@ -3350,6 +3350,7 @@
     }
     return {
       isIE: !!win.navigator.userAgent.match(/Trident/g) || !!win.navigator.userAgent.match(/MSIE/g),
+      isEdge: !!win.navigator.userAgent.match(/Edge/g),
       isSafari: isSafari(),
       isUiWebView: /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(win.navigator.userAgent),
     };
@@ -3387,7 +3388,7 @@
       suffixes.push('ios');
     }
     // WP8 Touch Events Fix
-    if (Browser.isIE && (Support.pointerEvents || Support.prefixedPointerEvents)) {
+    if ((Browser.isIE || Browser.isEdge) && (Support.pointerEvents || Support.prefixedPointerEvents)) {
       suffixes.push(("wp8-" + (params.direction)));
     }
 
@@ -4388,8 +4389,6 @@
         };
         Utils.extend(swiper.params, overwriteParams);
         Utils.extend(swiper.originalParams, overwriteParams);
-
-        swiper.virtual.update();
       },
       setTranslate: function setTranslate() {
         var swiper = this;
